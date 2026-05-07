@@ -1,6 +1,6 @@
 from typing import Optional
 from fastapi import FastAPI, HTTPException
-from app.schemas import PostCreate
+from app.schemas import PostCreate, PostResponse
 
 app = FastAPI()
 
@@ -32,7 +32,10 @@ def get_post(post_id: str):
 # Request Body
 # Since we are using pydantic, fastapi knows by default that this is request body
 @app.post("/posts")
-def create_post(post: PostCreate):
+def create_post(post: PostCreate)-> PostResponse:
     new_id = str(max(int(k) for k in text_posts.keys()) + 1)
     text_posts[new_id] = {"title": post.title, "content": post.content}
-    return text_posts[new_id]
+    return PostResponse(title=post.title, content=post.content)
+
+
+
